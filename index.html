@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoran Galaxy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Halaman Login */
+        .login-page {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3') center/cover no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+
+        .login-form h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        #login-btn, .complete-order, .checkout-btn, .print-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #login-btn:hover, .complete-order:hover, .checkout-btn:hover, .print-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: none;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+        }
+
+        #logout-btn {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: #34495e;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #2c3e50;
+        }
+
+        .nav-btn.active {
+            background-color: #3498db;
+        }
+
+        /* Konten Dashboard */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Menu */
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .menu-item-content {
+            padding: 15px;
+        }
+
+        .menu-item h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .menu-item p {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .menu-item .price {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #2980b9;
+        }
+
+        /* Keranjang */
+        .cart-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #e74c3c;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .quantity-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: right;
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 15px;
+        }
+
+        /* Checkout */
+        .checkout-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .checkout-container h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .order-type {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .order-type label {
+            flex: 1;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .order-type input[type="radio"] {
+            display: none;
+        }
+
+        .order-type input[type="radio"]:checked + label {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .delivery-info {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .payment-method {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-method:hover {
+            background-color: #e9ecef;
+        }
+
+        .payment-method.selected {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .complete-order {
+            background-color: #27ae60;
+        }
+
+        .complete-order:hover {
+            background-color: #229954;
+        }
+
+        /* Struk Minimarket Style */
+        .receipt-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-header h1 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .receipt-header p {
+            font-size: 10px;
+            margin: 2px 0;
+        }
+
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        .receipt-items {
+            margin-bottom: 10px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .receipt-item-name {
+            flex: 1;
+        }
+
+        .receipt-item-details {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .receipt-divider {
+            border-top: 1px dashed #333;
+            margin: 10px 0;
+        }
+
+        .receipt-summary {
+            margin-bottom: 10px;
+        }
+
+        .receipt-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .receipt-total {
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+
+        .receipt-payment {
+            margin-bottom: 10px;
+        }
+
+        .receipt-footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 10px;
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+        }
+
+        .receipt-footer p {
+            margin: 3px 0;
+        }
+
+        /* QRIS Code */
+        .qris-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .qris-container img {
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ddd;
+        }
+
+        .qris-container p {
+            margin-top: 5px;
+            font-size: 10px;
+        }
+
+        /* Riwayat */
+        .history-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .history-item-date {
+            color: #7f8c8d;
+        }
+
+        .history-item-total {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .history-item-details {
+            display: flex;
+            justify-content: space-between;
+            color: #7f8c8d;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Halaman Login -->
+    <div id="login-page" class="login-page">
+        <div class="login-container">
+            <div class="login-form">
+                <h1>Restoran Galaxy</h1>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Masukkan username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password">
+                </div>
+                <button id="login-btn">Login</button>
+                <div id="error-message" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard-page" class="dashboard-container">
+        <header>
+            <h1>Restoran Galaxy</h1>
+            <button id="logout-btn">Logout</button>
+        </header>
+        
+        <nav class="dashboard-nav">
+            <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+            <button class="nav-btn" data-page="menu">Menu</button>
+            <button class="nav-btn" data-page="cart">Keranjang</button>
+            <button class="nav-btn" data-page="history">Riwayat</button>
+        </nav>
+        
+        <main id="content-area">
+            <!-- Konten dinamis akan dimuat di sini -->
+        </main>
+    </div>
+
+    <script>
+        // Data menu
+        const menuData = {
+            makanan: [
+                {id: 1, nama: "Nasi Goreng Spesial", harga: 20000, gambar: "image/Nasgor.jpg"},
+                {id: 2, nama: "Mie Ayam Bakso", harga: 18000, gambar: "image/mie ayam.jpg"},
+                {id: 3, nama: "Sate Ayam", harga: 20000, gambar: "image/sate ayam.jpg"},
+                {id: 4, nama: "Gado-Gado", harga: 16000, gambar: "image/gado gado.jpg"},
+                {id: 5, nama: "Soto Ayam", harga: 17000, gambar: "image/soto ayam.jpg"},
+                {id: 6, nama: "Rendang Sapi", harga: 24000, gambar: "image/rendang sapi.jpg"},
+                {id: 7, nama: "Ayam Penyet", harga: 22000, gambar: "image/ayam penyet.jpg"},
+                {id: 8, nama: "Bakmi Goreng", harga: 10000, gambar: "image/bakmi goreng.jpg"},
+                {id: 9, nama: "Nasi Padang", harga: 15000, gambar: "image/nasi pdang.jpg"},
+                {id: 10, nama: "Ikan Bakar", harga: 30000, gambar: "image/ikan bakar.jpg"},
+                {id: 11, nama: "Pempek", harga: 10000, gambar: "image/pempek.jpg"},
+                {id: 12, nama: "Sate Kambing", harga: 30000, gambar: "image/sate kambing.jpg"},
+                {id: 13, nama: "Gudeg", harga: 20000, gambar: "image/gudeg.jpg"},
+                {id: 14, nama: "Rawon", harga: 25000, gambar: "image/rawon.jpg"},
+                {id: 15, nama: "Sop Buntut", harga: 30000, gambar: "image/sop buntut.jpg"},
+                {id: 16, nama: "Nasi Uduk", harga: 7000, gambar: "image/nasi uduk.jpg"},
+                {id: 17, nama: "Bubur Ayam", harga: 10000, gambar: "image/bubur ayam.jpg"},
+                {id: 18, nama: "Lontong Sayur", harga: 10000, gambar: "image/lontong sayur.jpg"},
+                {id: 19, nama: "Kerak Telor", harga: 20000, gambar: "image/kerak telor.jpg"},
+                {id: 20, nama: "Nasi Liwet", harga: 25000, gambar: "image/nasi liwet.jpg"},
+                {id: 21, nama: "Ayam Taliwang", harga: 35000, gambar: "image/ayam taliwang.jpg"},
+                {id: 22, nama: "Pecel Lele", harga: 20000, gambar: "image/pecel lele.jpg"},
+                {id: 23, nama: "Bebek Goreng", harga: 40000, gambar: "image/bebek goreng.jpg"},
+                {id: 24, nama: "Sate Padang", harga: 25000, gambar: "image/sate padang.jpg"},
+                {id: 25, nama: "Nasi Kuning", harga: 7000, gambar: "image/nasi kuning.jpg"}
+            ],
+            minuman: [
+                {id: 101, nama: "Es Teh Manis", harga: 5000, gambar: "image/es teh manis.jpg"},
+                {id: 102, nama: "Jus Alpukat", harga: 15000, gambar: "image/jus alpukat.jpg"},
+                {id: 103, nama: "Es Jeruk", harga: 8000, gambar: "image/es jeruk.jpg"},
+                {id: 104, nama: "Jus Mangga", harga: 12000, gambar: "image/jus mangga.jpg"},
+                {id: 105, nama: "Es Campur", harga: 18000, gambar: "image/es campur.jpg"},
+                {id: 106, nama: "Teh Botol", harga: 6000, gambar: "image/teh botol.jpg"},
+                {id: 107, nama: "Coca-Cola", harga: 7000, gambar: "image/coca cola.jpg"},
+                {id: 108, nama: "Sprite", harga: 7000, gambar: "image/sprite.jpg"},
+                {id: 109, nama: "Fanta", harga: 7000, gambar: "image/fanta.jpg"},
+                {id: 110, nama: "Air Mineral", harga: 4000, gambar: "image/air minerale.jpg"},
+                {id: 111, nama: "Kopi Hitam", harga: 8000, gambar: "image/kopi hitam.jpg"},
+                {id: 112, nama: "Cappuccino", harga: 15000, gambar: "image/cappucino.jpg"},
+                {id: 113, nama: "Mochaccino", harga: 17000, gambar: "image/moccacino.jpg"},
+                {id: 114, nama: "Chocolate Milkshake", harga: 20000, gambar: "image/milkshake chocolate.jpg"},
+                {id: 115, nama: "Vanilla Milkshake", harga: 20000, gambar: "image/milkshake vanilla.jpg"},
+                {id: 116, nama: "Strawberry Milkshake", harga: 20000, gambar: "image/milkshake strawberry.jpg"},
+                {id: 117, nama: "Jus Apel", harga: 12000, gambar: "image/jus apel.jpg"},
+                {id: 118, nama: "Jus Jambu", harga: 12000, gambar: "image/jus jambu.jpg"},
+                {id: 119, nama: "Jus Sirsak", harga: 14000, gambar: "image/jus sirsak.jpg"},
+                {id: 120, nama: "Es Kelapa Muda", harga: 15000, gambar: "image/es kelapa.jpg"},
+                {id: 121, nama: "Lemon Tea", harga: 10000, gambar: "image/lemon tea.jpg"},
+                {id: 122, nama: "Green Tea Latte", harga: 18000, gambar: "image/green tea latte.jpg"},
+                {id: 123, nama: "Thai Tea", harga: 16000, gambar: "image/thai tea.jpg"},
+                {id: 124, nama: "Bubble Tea", harga: 22000, gambar: "image/bubble tea.jpg"},
+                {id: 125, nama: "Es Doger", harga: 15000, gambar: "image/es doger.jpg"}
+            ]
+        };
+
+        // Data keranjang
+        let cart = [];
+        
+        // Data riwayat
+        let history = [];
+
+        // Login functionality
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            if (username === 'Restoran Galaxy' && password === 'Galaxy11') {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('dashboard-page').style.display = 'block';
+                loadDashboard();
+            } else {
+                errorMessage.textContent = 'Username atau password salah!';
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('error-message').textContent = '';
+        });
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const page = this.getAttribute('data-page');
+                loadPage(page);
+            });
+        });
+
+        // Load page content
+        function loadPage(page) {
+            const contentArea = document.getElementById('content-area');
+            
+            switch(page) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'menu':
+                    loadMenu();
+                    break;
+                case 'cart':
+                    loadCart();
+                    break;
+                case 'history':
+                    loadHistory();
+                    break;
+            }
+        }
+
+        // Load dashboard
+        function loadDashboard() {
+            const contentArea = document.getElementById('content-area');
+            
+            const totalItems = cart.length;
+            const totalOrders = history.length;
+            const totalRevenue = history.reduce((sum, order) => sum + order.total, 0);
+            
+            contentArea.innerHTML = `
+                <div class="dashboard-content">
+                    <div class="stat-card">
+                        <h3>Total Item di Keranjang</h3>
+                        <p>${totalItems}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Pesanan</h3>
+                        <p>${totalOrders}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Pendapatan</h3>
+                        <p>Rp ${totalRevenue.toLocaleString('id-ID')}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load menu
+        function loadMenu() {
+            const contentArea = document.getElementById('content-area');
+            
+            let menuHTML = `
+                <div class="menu-container">
+                    <h2 style="grid-column: 1/-1; margin-bottom: 20px;">Makanan</h2>
+            `;
+            
+            menuData.makanan.forEach(item => {
+                menuHTML += `
+                    <div class="menu-item">
+                        <img src="${item.gambar}" alt="${item.nama}">
+                        <div class="menu-item-content">
+                            <h3>${item.nama}</h3>
+                            <p>IDR ${item.harga.toLocaleString('id-ID')}</p>
+                            <button class="add-to-cart" data-id="${item.id}" data-category="makanan">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            menuHTML += `
+                    <h2 style="grid-column: 1/-1; margin: 30px 0 20px;">Minuman</h2>
+            `;
+            
+            menuData.minuman.forEach(item => {
+                menuHTML += `
+                    <div class="menu-item">
+                        <img src="${item.gambar}" alt="${item.nama}">
+                        <div class="menu-item-content">
+                            <h3>${item.nama}</h3>
+                            <p>IDR ${item.harga.toLocaleString('id-ID')}</p>
+                            <button class="add-to-cart" data-id="${item.id}" data-category="minuman">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            menuHTML += `</div>`;
+            contentArea.innerHTML = menuHTML;
+            
+            // Add event listeners to add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const category = this.getAttribute('data-category');
+                    addToCart(id, category);
+                });
+            });
+        }
+
+        // Add to cart
+        function addToCart(id, category) {
+            const item = menuData[category].find(item => item.id === id);
+            if (item) {
+                cart.push({...item, category, quantity: 1});
+                alert(`${item.nama} telah ditambahkan ke keranjang!`);
+            }
+        }
+
+        // Load cart
+        function loadCart() {
+            const contentArea = document.getElementById('content-area');
+            
+            if (cart.length === 0) {
+                contentArea.innerHTML = `
+                    <div class="cart-container">
+                        <h2>Keranjang Belanja</h2>
+                        <p>Keranjang belanja kosong!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let cartHTML = `
+                <div class="cart-container">
+                    <h2>Keranjang Belanja</h2>
+            `;
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                const itemTotal = item.harga * item.quantity;
+                total += itemTotal;
+                cartHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.nama}</div>
+                            <div class="cart-item-price">IDR ${item.harga.toLocaleString('id-ID')} x ${item.quantity} = IDR ${itemTotal.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="quantity-btn" data-index="${index}" data-action="decrease">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" data-index="${index}" data-action="increase">+</button>
+                            <button class="remove-btn" data-index="${index}">Hapus</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartHTML += `
+                    <div class="cart-summary">
+                        <h3>Total: IDR ${total.toLocaleString('id-ID')}</h3>
+                        <button class="checkout-btn">Checkout</button>
+                    </div>
+                </div>
+            `;
+            
+            contentArea.innerHTML = cartHTML;
+            
+            // Add event listeners to cart buttons
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const action = this.getAttribute('data-action');
+                    
+                    if (action === 'increase') {
+                        cart[index].quantity++;
+                    } else if (action === 'decrease') {
+                        if (cart[index].quantity > 1) {
+                            cart[index].quantity--;
+                        } else {
+                            cart.splice(index, 1);
+                        }
+                    }
+                    loadCart();
+                });
+            });
+            
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    cart.splice(index, 1);
+                    loadCart();
+                });
+            });
+            
+            document.querySelector('.checkout-btn').addEventListener('click', function() {
+                loadCheckout();
+            });
+        }
+
+        // Load checkout
+        function loadCheckout() {
+            const contentArea = document.getElementById('content-area');
+            
+            let total = cart.reduce((sum, item) => sum + (item.harga * item.quantity), 0);
+            
+            contentArea.innerHTML = `
+                <div class="checkout-container">
+                    <h2>Checkout</h2>
+                    
+                    <div class="form-group">
+                        <label>Jenis Pesanan</label>
+                        <div class="order-type">
+                            <input type="radio" id="dine-in" name="order-type" value="dine-in" checked>
+                            <label for="dine-in">Dine-in</label>
+                            
+                            <input type="radio" id="delivery" name="order-type" value="delivery">
+                            <label for="delivery">Delivery</label>
+                        </div>
+                    </div>
+                    
+                    <div id="delivery-info" class="delivery-info">
+                        <div class="form-group">
+                            <label for="nama-penerima">Nama Penerima</label>
+                            <input type="text" id="nama-penerima" placeholder="Masukkan nama penerima">
+                        </div>
+                        <div class="form-group">
+                            <label for="alamat">Alamat</label>
+                            <input type="text" id="alamat" placeholder="Masukkan alamat">
+                        </div>
+                        <div class="form-group">
+                            <label for="no-hp">No. HP</label>
+                            <input type="text" id="no-hp" placeholder="Masukkan nomor HP">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Metode Pembayaran</label>
+                        <div class="payment-methods">
+                            <div class="payment-method" data-method="cash">Cash</div>
+                            <div class="payment-method" data-method="debit">Debit</div>
+                            <div class="payment-method" data-method="qris">QRIS</div>
+                            <div class="payment-method" data-method="dana">Dana</div>
+                            <div class="payment-method" data-method="gopay">GoPay</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h3>Total: IDR ${total.toLocaleString('id-ID')}</h3>
+                    </div>
+                    
+                    <button class="complete-order">Selesaikan Pesanan</button>
+                </div>
+            `;
+            
+            // Order type selection
+            document.querySelectorAll('input[name="order-type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const deliveryInfo = document.getElementById('delivery-info');
+                    if (this.value === 'delivery') {
+                        deliveryInfo.style.display = 'block';
+                    } else {
+                        deliveryInfo.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Complete order
+            document.querySelector('.complete-order').addEventListener('click', function() {
+                const orderType = document.querySelector('input[name="order-type"]:checked').value;
+                const paymentMethod = document.querySelector('.payment-method.selected');
+                
+                if (!paymentMethod) {
+                    alert('Silakan pilih metode pembayaran!');
+                    return;
+                }
+                
+                const payment = paymentMethod.getAttribute('data-method');
+                let deliveryInfo = null;
+                let cashAmount = 0;
+                
+                if (orderType === 'delivery') {
+                    const nama = document.getElementById('nama-penerima').value;
+                    const alamat = document.getElementById('alamat').value;
+                    const noHp = document.getElementById('no-hp').value;
+                    
+                    if (!nama || !alamat || !noHp) {
+                        alert('Silakan lengkapi informasi delivery!');
+                        return;
+                    }
+                    
+                    deliveryInfo = { nama, alamat, noHp };
+                }
+                
+                // If cash payment, ask for amount
+                if (payment === 'cash') {
+                    cashAmount = prompt('Masukkan jumlah pembayaran (IDR):');
+                    if (!cashAmount || isNaN(cashAmount) || parseInt(cashAmount) < total) {
+                        alert('Jumlah pembayaran tidak valid!');
+                        return;
+                    }
+                    cashAmount = parseInt(cashAmount);
+                }
+                
+                // Add to history
+                const order = {
+                    id: generateTransactionId(),
+                    date: new Date().toLocaleString('id-ID'),
+                    items: [...cart],
+                    total: total,
+                    paymentMethod: payment,
+                    orderType: orderType,
+                    deliveryInfo: deliveryInfo,
+                    cashAmount: cashAmount
+                };
+                
+                history.push(order);
+                
+                // Clear cart
+                cart = [];
+                
+                // Load receipt
+                loadReceipt(order);
+            });
+        }
+
+        // Generate transaction ID
+        function generateTransactionId() {
+            const date = new Date();
+            const year = date.getFullYear().toString().slice(-2);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+            
+            return `TRX${year}${month}${day}${hours}${minutes}${seconds}${random}`;
+        }
+
+        // Load receipt
+        function loadReceipt(order) {
+            const contentArea = document.getElementById('content-area');
+            
+            // Format date for receipt
+            const dateObj = new Date(order.date);
+            const formattedDate = dateObj.toLocaleDateString('id-ID', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+            const formattedTime = dateObj.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            // Get day name in Indonesian
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const dayName = days[dateObj.getDay()];
+            
+            // Calculate tax (10%)
+            const tax = Math.round(order.total * 0.1);
+            const subtotal = order.total - tax;
+            
+            // Get customer name
+            let customerName = "Walk-in Customer";
+            if (order.orderType === 'delivery' && order.deliveryInfo) {
+                customerName = order.deliveryInfo.nama;
+            }
+            
+            let receiptHTML = `
+                <div class="receipt-container">
+                    <div class="receipt-header">
+                        <h1>RESTORAN GALAXY</h1>
+                        <p>Jl. Galaxy Raya No. 267, Mars</p>
+                        <p>Telp: 086678412156</p>
+                        <p>================================</p>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <div>No. Transaksi: ${order.id}</div>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <div>${dayName}, ${formattedDate}</div>
+                        <div>${formattedTime}</div>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <div>Kasir: Dudung Samsudin</div>
+                    </div>
+                    
+                    <div class="receipt-info">
+                        <div>Customer: ${customerName}</div>
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-items">
+            `;
+            
+            // Group items by name and count quantities
+            const itemMap = {};
+            order.items.forEach(item => {
+                if (itemMap[item.nama]) {
+                    itemMap[item.nama].quantity += item.quantity;
+                } else {
+                    itemMap[item.nama] = {
+                        ...item,
+                        quantity: item.quantity
+                    };
+                }
+            });
+            
+            // Display items
+            Object.values(itemMap).forEach(item => {
+                const itemTotal = item.harga * item.quantity;
+                receiptHTML += `
+                    <div class="receipt-item">
+                        <div class="receipt-item-name">
+                            ${item.nama}<br>
+                            <span style="font-size: 10px;">${item.quantity} x Rp ${item.harga.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="receipt-item-details">
+                            Rp ${itemTotal.toLocaleString('id-ID')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            receiptHTML += `
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-summary">
+                        <div class="receipt-summary-row">
+                            <div>Subtotal</div>
+                            <div>Rp ${subtotal.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="receipt-summary-row">
+                            <div>Pajak (10%)</div>
+                            <div>Rp ${tax.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="receipt-summary-row receipt-total">
+                            <div>TOTAL</div>
+                            <div>Rp ${order.total.toLocaleString('id-ID')}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-payment">
+                        <div class="receipt-summary-row">
+                            <div>Metode Pembayaran</div>
+                            <div>${order.paymentMethod.toUpperCase()}</div>
+                        </div>
+            `;
+            
+            // Show cash payment details if applicable
+            if (order.paymentMethod === 'cash') {
+                const change = order.cashAmount - order.total;
+                receiptHTML += `
+                        <div class="receipt-summary-row">
+                            <div>Bayar</div>
+                            <div>Rp ${order.cashAmount.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="receipt-summary-row">
+                            <div>Kembali</div>
+                            <div>Rp ${change.toLocaleString('id-ID')}</div>
+                        </div>
+                `;
+            }
+            
+            // Show QRIS code if payment method is QRIS
+            if (order.paymentMethod === 'qris') {
+                receiptHTML += `
+                    </div>
+                    
+                    <div class="qris-container">
+                        <img src:'qris.png'> 
+                        <p>Scan QRIS untuk pembayaran</p>
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-payment">
+                `;
+            }
+            
+            receiptHTML += `
+                    </div>
+                    
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-footer">
+                        <p>Terima kasih atas kunjungan Anda</p>
+                        <p>Barang yang sudah dibeli tidak dapat dikembalikan</p>
+                        <p>================================</p>
+                        <p>www.restoran galaxy.com</p>
+                    </div>
+                    
+                    <button class="print-btn">Cetak Struk</button>
+                </div>
+            `;
+            
+            contentArea.innerHTML = receiptHTML;
+            
+            document.querySelector('.print-btn').addEventListener('click', function() {
+                window.print();
+            });
+        }
+
+        // Load history
+        function loadHistory() {
+            const contentArea = document.getElementById('content-area');
+            
+            if (history.length === 0) {
+                contentArea.innerHTML = `
+                    <div class="history-container">
+                        <h2>Riwayat Pembelian</h2>
+                        <p>Belum ada riwayat pembelian!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let historyHTML = `
+                <div class="history-container">
+                    <h2>Riwayat Pembelian</h2>
+            `;
+            
+            history.forEach((order, index) => {
+                historyHTML += `
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <span class="history-item-date">${order.date}</span>
+                            <span class="history-item-total">IDR ${order.total.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="history-item-details">
+                            <span>No. Transaksi: ${order.id}</span>
+                            <span>${order.items.length} item</span>
+                            <span>${order.paymentMethod.toUpperCase()}</span>
+                            <span>${order.orderType === 'dine-in' ? 'Dine-in' : 'Delivery'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyHTML += `</div>`;
+            contentArea.innerHTML = historyHTML;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load dashboard by default
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>
